@@ -34,7 +34,9 @@ function showDashboard() {
 
 async function loadResults() {
     try {
-        const response = await fetch(SCRIPT_URL + '?action=results');
+        const response = await fetch(SCRIPT_URL + '?action=results', {
+            redirect: 'follow'
+        });
         const data = await response.json();
         const votes = data.votes || [];
 
@@ -43,7 +45,7 @@ async function loadResults() {
         displayVotes(votes);
     } catch (error) {
         document.getElementById('ranking-list').innerHTML =
-            '<p class="loading">Kon resultaten niet laden. Controleer de configuratie.</p>';
+            '<p class="loading">Kon resultaten niet laden. Heb je het script opnieuw gedeployed als nieuwe versie?</p>';
         document.getElementById('votes-list').innerHTML =
             '<p class="loading">Kon stemmen niet laden.</p>';
     }
