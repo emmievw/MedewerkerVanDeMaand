@@ -18,8 +18,8 @@
         <div class="container">
             <section class="hero">
                 <div class="hero-emoji">🏆</div>
-                <h1>Wie is jouw held?</h1>
-                <p class="hero-sub">Nomineer de collega die volgens jou dé <strong>Medewerker van de Maand</strong> verdient. Één stem, één motivatie — make it count!</p>
+                <h1>Medewerker van de Maand</h1>
+                <p class="hero-sub">Wie verdient de titel <strong>Medewerker van de Maand Juni</strong>? Nomineer je collega en schrijf een korte motivatie.</p>
             </section>
 
             <section class="vote-section">
@@ -34,7 +34,7 @@
                         <textarea id="motivation" rows="4" placeholder="Vertel wat deze collega zo bijzonder maakt..." required></textarea>
                     </div>
 
-                    <button type="submit" class="btn-primary" id="submit-btn">
+                    <button type="submit" class="btn-primary btn-disabled" id="submit-btn" disabled>
                         <span class="btn-text">🎉 Stem indienen</span>
                         <span class="btn-loading" style="display:none;">Even geduld...</span>
                     </button>
@@ -43,13 +43,15 @@
                 <div id="success-message" class="success-message" style="display:none;">
                     <div class="success-icon">✓</div>
                     <h2>Bedankt voor je stem!</h2>
-                    <p>Je stem is succesvol ingediend. De winnaar wordt binnenkort bekendgemaakt.</p>
+                    <p>Je stem is succesvol ingediend.</p>
+                    <p style="margin-top: 1rem; color: var(--text-medium);">🗓️ De winnaar wordt op <strong>25 juni</strong> bekendgemaakt!</p>
                 </div>
 
                 <div id="already-voted" class="info-message" style="display:none;">
                     <div class="info-icon">ℹ️</div>
                     <h2>Je hebt al gestemd</h2>
                     <p>Je kunt maar één keer stemmen. Bedankt voor je deelname!</p>
+                    <p style="margin-top: 1rem; color: var(--text-medium);">🗓️ De winnaar wordt op <strong>25 juni</strong> bekendgemaakt!</p>
                 </div>
 
                 <div id="error-message" class="error-message" style="display:none;">

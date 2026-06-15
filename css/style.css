@@ -186,9 +186,16 @@ body {
     transform: translateY(0);
 }
 
-.btn-primary:disabled {
+.btn-primary.btn-disabled {
     background: #ccc;
+    box-shadow: none;
     cursor: not-allowed;
+    transform: none;
+}
+
+.btn-primary.btn-disabled:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 .btn-secondary {

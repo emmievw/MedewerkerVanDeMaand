@@ -35,7 +35,9 @@ function doGet(e) {
 
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    // Werkt met zowel application/json als text/plain
+    const raw = e.postData.contents;
+    const data = JSON.parse(raw);
 
     if (data.action === 'vote') {
       return submitVote(data);

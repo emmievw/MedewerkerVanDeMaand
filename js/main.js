@@ -5,6 +5,24 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIBntsuKYCDNf1UULhW
 document.addEventListener('DOMContentLoaded', () => {
     checkAlreadyVoted();
     document.getElementById('vote-form').addEventListener('submit', handleVote);
+
+    // Knop pas groen als beide velden ingevuld
+    const nominee = document.getElementById('nominee');
+    const motivation = document.getElementById('motivation');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function checkFields() {
+        if (nominee.value.trim() && motivation.value.trim()) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-disabled');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('btn-disabled');
+        }
+    }
+
+    nominee.addEventListener('input', checkFields);
+    motivation.addEventListener('input', checkFields);
 });
 
 function checkAlreadyVoted() {
@@ -23,8 +41,8 @@ async function handleVote(e) {
     const submitBtn = document.getElementById('submit-btn');
     const errorDiv = document.getElementById('error-message');
 
-    if (!nominee) {
-        showError('Vul een naam in!');
+    if (!nominee || !motivation) {
+        showError('Vul beide velden in!');
         return;
     }
 
@@ -35,10 +53,11 @@ async function handleVote(e) {
     errorDiv.style.display = 'none';
 
     try {
+        // text/plain is nodig zodat no-cors de body meestuurt
         await fetch(SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
                 action: 'vote',
                 nominee: nominee,
