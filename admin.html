@@ -34,26 +34,46 @@
             <!-- Dashboard sectie -->
             <section id="dashboard-section" style="display:none;">
                 <div class="dashboard-header">
-                    <h1>Resultaten bekijken</h1>
+                    <h1>📊 Resultaten</h1>
+                    <button id="refresh-btn" class="btn-secondary">🔄 Vernieuwen</button>
                 </div>
 
-                <div class="vote-form" style="text-align: center;">
-                    <p style="margin-bottom: 1.5rem; color: var(--text-medium);">De stemmen staan in je Google Drive. Klik hieronder om ze te bekijken:</p>
-                    
-                    <a href="https://docs.google.com/spreadsheets" target="_blank" class="btn-primary" style="display: inline-block; text-decoration: none; margin-bottom: 1rem;">
-                        📊 Open Google Sheets
-                    </a>
+                <!-- Stats -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-votes">-</div>
+                        <div class="stat-label">Stemmen</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-remaining">-</div>
+                        <div class="stat-label">Resterend</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="current-leader">-</div>
+                        <div class="stat-label">Koploper</div>
+                    </div>
+                </div>
 
-                    <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-light);">
-                        Zoek naar: <strong>"Medewerker van de Maand - Stemmen"</strong>
-                    </p>
+                <!-- Ranking -->
+                <div class="vote-form">
+                    <h2 style="margin-bottom: 1rem;">🏆 Ranking</h2>
+                    <div id="ranking-list">
+                        <p class="loading">Laden...</p>
+                    </div>
+                </div>
 
-                    <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);">
+                <!-- Alle stemmen -->
+                <div class="vote-form" style="margin-top: 1.5rem;">
+                    <h2 style="margin-bottom: 1rem;">📝 Alle stemmen</h2>
+                    <div id="votes-list">
+                        <p class="loading">Laden...</p>
+                    </div>
+                </div>
 
-                    <p style="margin-bottom: 1rem; color: var(--text-medium);">Of bekijk de live resultaten als JSON:</p>
-                    <a href="https://script.google.com/macros/s/AKfycbxIBntsuKYCDNf1UULhWw8T6SkTKOW7gNqvw-mQpciUREsC9Ux-Zijl0gqsKbrjPodIkQ/exec?action=results" target="_blank" class="btn-secondary" style="display: inline-block; text-decoration: none;">
-                        📋 Bekijk live resultaten
-                    </a>
+                <!-- Setup instructie (verborgen na configuratie) -->
+                <div id="setup-notice" class="vote-form" style="margin-top: 1.5rem; display: none;">
+                    <h2 style="margin-bottom: 0.5rem;">⚠️ Sheet ID nodig</h2>
+                    <p style="color: var(--text-medium);">Open je Google Sheet, kopieer het ID uit de URL en vul het in in <code>js/admin.js</code></p>
                 </div>
             </section>
         </div>
@@ -63,6 +83,6 @@
         <p>© 2026 — Medewerker van de Maand (Admin)</p>
     </footer>
 
-    <script src="js/admin.js?v=3"></script>
+    <script src="js/admin.js?v=4"></script>
 </body>
 </html>

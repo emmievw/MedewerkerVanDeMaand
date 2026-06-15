@@ -1,5 +1,9 @@
 // === CONFIGURATIE ===
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIBntsuKYCDNf1UULhWw8T6SkTKOW7gNqvw-mQpciUREsC9Ux-Zijl0gqsKbrjPodIkQ/exec';
+// VUL HIER JE GOOGLE SHEET ID IN:
+// Open je sheet → kopieer het lange ID uit de URL:
+// https://docs.google.com/spreadsheets/d/HIER_STAAT_HET_ID/edit
+const SHEET_ID = 'VUL_HIER_JE_SHEET_ID_IN';
+const SHEET_NAME = 'Juni 2026';
 const ADMIN_PASSWORD_HASH = '32905b279b460a446ebb1134c2a6d9023f858d2d788c2eed73cab62fed7237e7';
 
 // === ADMIN LOGIN ===
@@ -29,43 +33,50 @@ async function handleLogin(e) {
 function showDashboard() {
     document.getElementById('login-section').style.display = 'none';
     document.getElementById('dashboard-section').style.display = 'block';
+
+    if (SHEET_ID === 'VUL_HIER_JE_SHEET_ID_IN') {
+        document.getElementById('setup-notice').style.display = 'block';
+        document.getElementById('ranking-list').innerHTML = '<p class="loading">Sheet ID nog niet ingesteld.</p>';
+        document.getElementById('votes-list').innerHTML = '';
+        return;
+    }
+
     loadResults();
 }
 
 async function loadResults() {
     try {
-        const data = await fetchJSONP(SCRIPT_URL + '?action=results');
-        const votes = data.votes || [];
+        document.getElementById('ranking-list').innerHTML = '<p class="loading">Laden...</p>';
+        document.getElementById('votes-list').innerHTML = '<p class="loading">Laden...</p>';
+
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+        const response = await fetch(url);
+        const text = await response.text();
+
+        // Google wraps de response in: google.visualization.Query.setResponse({...});
+        const jsonStr = text.match(/google\.visualization\.Query\.setResponse\((.+)\)/);
+        if (!jsonStr) throw new Error('Kon data niet parsen. Is de sheet gepubliceerd?');
+
+        const data = JSON.parse(jsonStr[1]);
+        const rows = data.table.rows;
+
+        // Parse de rijen (kolom 0=timestamp, 1=genomineerde, 2=motivatie)
+        const votes = rows.map(row => ({
+            timestamp: row.c[0] ? row.c[0].v : '',
+            nominee: row.c[1] ? row.c[1].v : '',
+            motivation: row.c[2] ? row.c[2].v : ''
+        })).filter(v => v.nominee);
 
         displayStats(votes);
         displayRanking(votes);
         displayVotes(votes);
-    } catch (error) {
-        document.getElementById('ranking-list').innerHTML =
-            '<p class="loading">Kon resultaten niet laden. Probeer te vernieuwen.</p>';
-        document.getElementById('votes-list').innerHTML =
-            '<p class="loading">Kon stemmen niet laden.</p>';
-    }
-}
 
-// JSONP: omzeilt CORS door een script-tag te gebruiken
-function fetchJSONP(url) {
-    return new Promise((resolve, reject) => {
-        const callbackName = 'jsonp_' + Date.now();
-        window[callbackName] = function(data) {
-            resolve(data);
-            delete window[callbackName];
-            script.remove();
-        };
-        const script = document.createElement('script');
-        script.src = url + '&callback=' + callbackName;
-        script.onerror = () => {
-            reject(new Error('JSONP request failed'));
-            delete window[callbackName];
-            script.remove();
-        };
-        document.head.appendChild(script);
-    });
+    } catch (error) {
+        console.error('Fout bij laden:', error);
+        document.getElementById('ranking-list').innerHTML =
+            `<p class="loading">Kon resultaten niet laden.<br><small>${escapeHtml(error.message)}</small></p>`;
+        document.getElementById('votes-list').innerHTML = '';
+    }
 }
 
 function displayStats(votes) {
@@ -89,10 +100,10 @@ function displayRanking(votes) {
     }
 
     container.innerHTML = sorted.map(([name, count], index) => `
-        <div class="ranking-item">
-            <span class="ranking-position">${index + 1}</span>
-            <span class="ranking-name">${escapeHtml(name)}</span>
-            <span class="ranking-votes">${count} stem${count !== 1 ? 'men' : ''}</span>
+        <div style="display:flex; align-items:center; gap:1rem; padding:0.75rem 0; border-bottom:1px solid var(--border, #eee);">
+            <span style="font-size:1.5rem; font-weight:700; color:var(--afas-green); min-width:2rem;">#${index + 1}</span>
+            <span style="flex:1; font-weight:500;">${escapeHtml(name)}</span>
+            <span style="background:var(--afas-green); color:white; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem;">${count} stem${count !== 1 ? 'men' : ''}</span>
         </div>
     `).join('');
 }
@@ -105,15 +116,14 @@ function displayVotes(votes) {
         return;
     }
 
-    // Nieuwste eerst
     const reversed = [...votes].reverse();
     container.innerHTML = reversed.map(vote => `
-        <div class="vote-item">
-            <div class="vote-item-header">
-                <span class="vote-item-to">→ ${escapeHtml(vote.nominee)}</span>
-                <span style="color: var(--text-light); font-size: 0.8rem;">${formatDate(vote.timestamp)}</span>
+        <div style="padding:0.75rem 0; border-bottom:1px solid var(--border, #eee);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="color:var(--afas-green);">→ ${escapeHtml(vote.nominee)}</strong>
+                <small style="color:var(--text-light, #999);">${formatDate(vote.timestamp)}</small>
             </div>
-            <p class="vote-item-motivation">"${escapeHtml(vote.motivation)}"</p>
+            <p style="margin-top:0.3rem; font-style:italic; color:var(--text-medium, #666);">"${escapeHtml(vote.motivation)}"</p>
         </div>
     `).join('');
 }
@@ -130,12 +140,13 @@ function getTally(votes) {
 function formatDate(timestamp) {
     if (!timestamp) return '';
     const d = new Date(timestamp);
+    if (isNaN(d)) return '';
     return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
 function escapeHtml(text) {
     const div = document.createElement('div');
-    div.textContent = text;
+    div.textContent = text || '';
     return div.innerHTML;
 }
 
