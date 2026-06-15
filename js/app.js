@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = !filled;
         submitBtn.classList.toggle('btn-disabled', !filled);
     }
-    nominee.addEventListener('input', checkFields);
+    nominee.addEventListener('change', checkFields);
     motivation.addEventListener('input', checkFields);
     document.getElementById('vote-form').addEventListener('submit', handleVote);
 
