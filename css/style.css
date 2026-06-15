@@ -47,6 +47,13 @@ body {
     font-weight: 700;
     color: var(--oo-red);
     font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    flex-shrink: 0;
 }
 
 .nav-tabs {
