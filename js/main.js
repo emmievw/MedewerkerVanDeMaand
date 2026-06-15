@@ -1,5 +1,6 @@
 // === CONFIGURATIE ===
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIBntsuKYCDNf1UULhWw8T6SkTKOW7gNqvw-mQpciUREsC9Ux-Zijl0gqsKbrjPodIkQ/exec';
+// Formspree endpoint - vul je eigen form ID in na registratie op formspree.io
+const FORMSPREE_URL = 'https://formspree.io/f/VUL_HIER_JE_FORM_ID_IN';
 
 // === INITIALISATIE ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -53,18 +54,17 @@ async function handleVote(e) {
     errorDiv.style.display = 'none';
 
     try {
-        // text/plain is nodig zodat no-cors de body meestuurt
-        await fetch(SCRIPT_URL, {
+        const response = await fetch(FORMSPREE_URL, {
             method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({
-                action: 'vote',
-                nominee: nominee,
-                motivation: motivation,
+                genomineerde: nominee,
+                motivatie: motivation,
                 timestamp: new Date().toISOString()
             })
         });
+
+        if (!response.ok) throw new Error('Verzenden mislukt');
 
         localStorage.setItem('mvdm-voted-juni-2026', nominee);
         document.getElementById('vote-form').style.display = 'none';

@@ -1,9 +1,5 @@
 // === CONFIGURATIE ===
-// VUL HIER JE GOOGLE SHEET ID IN:
-// Open je sheet → kopieer het lange ID uit de URL:
-// https://docs.google.com/spreadsheets/d/HIER_STAAT_HET_ID/edit
-const SHEET_ID = 'VUL_HIER_JE_SHEET_ID_IN';
-const SHEET_NAME = 'Juni 2026';
+const STORAGE_KEY = 'mvdm-admin-votes';
 const ADMIN_PASSWORD_HASH = '32905b279b460a446ebb1134c2a6d9023f858d2d788c2eed73cab62fed7237e7';
 
 // === ADMIN LOGIN ===
@@ -13,7 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('login-form').addEventListener('submit', handleLogin);
-    document.getElementById('refresh-btn').addEventListener('click', loadResults);
+    document.getElementById('add-vote-form').addEventListener('submit', handleAddVote);
+    document.getElementById('export-reveal-btn').addEventListener('click', exportForReveal);
+    document.getElementById('clear-btn').addEventListener('click', clearAllVotes);
 });
 
 async function handleLogin(e) {
@@ -33,117 +31,129 @@ async function handleLogin(e) {
 function showDashboard() {
     document.getElementById('login-section').style.display = 'none';
     document.getElementById('dashboard-section').style.display = 'block';
+    renderAll();
+}
 
-    if (SHEET_ID === 'VUL_HIER_JE_SHEET_ID_IN') {
-        document.getElementById('setup-notice').style.display = 'block';
-        document.getElementById('ranking-list').innerHTML = '<p class="loading">Sheet ID nog niet ingesteld.</p>';
-        document.getElementById('votes-list').innerHTML = '';
-        return;
+// === STEMMEN BEHEREN ===
+function getVotes() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+}
+
+function saveVotes(votes) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+}
+
+function handleAddVote(e) {
+    e.preventDefault();
+    const nominee = document.getElementById('add-nominee').value.trim();
+    const motivation = document.getElementById('add-motivation').value.trim();
+
+    if (!nominee || !motivation) return;
+
+    const votes = getVotes();
+    votes.push({
+        nominee: nominee,
+        motivation: motivation,
+        timestamp: new Date().toISOString()
+    });
+    saveVotes(votes);
+
+    document.getElementById('add-nominee').value = '';
+    document.getElementById('add-motivation').value = '';
+    renderAll();
+}
+
+function deleteVote(index) {
+    const votes = getVotes();
+    votes.splice(index, 1);
+    saveVotes(votes);
+    renderAll();
+}
+
+function clearAllVotes() {
+    if (confirm('Weet je zeker dat je ALLE stemmen wilt wissen?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderAll();
     }
-
-    loadResults();
 }
 
-async function loadResults() {
-    try {
-        document.getElementById('ranking-list').innerHTML = '<p class="loading">Laden...</p>';
-        document.getElementById('votes-list').innerHTML = '<p class="loading">Laden...</p>';
-
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-        const response = await fetch(url);
-        const text = await response.text();
-
-        // Google wraps de response in: google.visualization.Query.setResponse({...});
-        const jsonStr = text.match(/google\.visualization\.Query\.setResponse\((.+)\)/);
-        if (!jsonStr) throw new Error('Kon data niet parsen. Is de sheet gepubliceerd?');
-
-        const data = JSON.parse(jsonStr[1]);
-        const rows = data.table.rows;
-
-        // Parse de rijen (kolom 0=timestamp, 1=genomineerde, 2=motivatie)
-        const votes = rows.map(row => ({
-            timestamp: row.c[0] ? row.c[0].v : '',
-            nominee: row.c[1] ? row.c[1].v : '',
-            motivation: row.c[2] ? row.c[2].v : ''
-        })).filter(v => v.nominee);
-
-        displayStats(votes);
-        displayRanking(votes);
-        displayVotes(votes);
-
-    } catch (error) {
-        console.error('Fout bij laden:', error);
-        document.getElementById('ranking-list').innerHTML =
-            `<p class="loading">Kon resultaten niet laden.<br><small>${escapeHtml(error.message)}</small></p>`;
-        document.getElementById('votes-list').innerHTML = '';
-    }
+// === WEERGAVE ===
+function renderAll() {
+    const votes = getVotes();
+    document.getElementById('vote-count-label').textContent = votes.length + ' stem' + (votes.length !== 1 ? 'men' : '') + ' ingevoerd';
+    renderRanking(votes);
+    renderVotes(votes);
 }
 
-function displayStats(votes) {
-    const tally = getTally(votes);
-    const sorted = Object.entries(tally).sort((a, b) => b[1] - a[1]);
-
-    document.getElementById('total-votes').textContent = votes.length;
-    document.getElementById('total-remaining').textContent = Math.max(0, 25 - votes.length);
-    document.getElementById('current-leader').textContent =
-        sorted.length > 0 ? sorted[0][0] : '—';
-}
-
-function displayRanking(votes) {
+function renderRanking(votes) {
     const container = document.getElementById('ranking-list');
-    const tally = getTally(votes);
+    const tally = {};
+    votes.forEach(v => { tally[v.nominee] = (tally[v.nominee] || 0) + 1; });
     const sorted = Object.entries(tally).sort((a, b) => b[1] - a[1]);
 
     if (sorted.length === 0) {
-        container.innerHTML = '<p class="loading">Nog geen stemmen uitgebracht.</p>';
+        container.innerHTML = '<p class="loading">Nog geen stemmen ingevoerd.</p>';
         return;
     }
 
-    container.innerHTML = sorted.map(([name, count], index) => `
-        <div style="display:flex; align-items:center; gap:1rem; padding:0.75rem 0; border-bottom:1px solid var(--border, #eee);">
-            <span style="font-size:1.5rem; font-weight:700; color:var(--afas-green); min-width:2rem;">#${index + 1}</span>
-            <span style="flex:1; font-weight:500;">${escapeHtml(name)}</span>
-            <span style="background:var(--afas-green); color:white; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem;">${count} stem${count !== 1 ? 'men' : ''}</span>
+    container.innerHTML = sorted.map(([name, count], i) => `
+        <div class="ranking-item">
+            <span class="ranking-pos">${i === 0 ? '\u{1F451}' : '#' + (i + 1)}</span>
+            <span class="ranking-name">${escapeHtml(name)}</span>
+            <span class="ranking-count">${count} stem${count !== 1 ? 'men' : ''}</span>
         </div>
     `).join('');
 }
 
-function displayVotes(votes) {
+function renderVotes(votes) {
     const container = document.getElementById('votes-list');
 
     if (votes.length === 0) {
-        container.innerHTML = '<p class="loading">Nog geen stemmen uitgebracht.</p>';
+        container.innerHTML = '<p class="loading">Nog geen stemmen ingevoerd.</p>';
         return;
     }
 
-    const reversed = [...votes].reverse();
+    const reversed = [...votes].map((v, i) => ({ ...v, index: i })).reverse();
     container.innerHTML = reversed.map(vote => `
-        <div style="padding:0.75rem 0; border-bottom:1px solid var(--border, #eee);">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <strong style="color:var(--afas-green);">→ ${escapeHtml(vote.nominee)}</strong>
-                <small style="color:var(--text-light, #999);">${formatDate(vote.timestamp)}</small>
+        <div class="vote-item">
+            <div class="vote-item-header">
+                <strong class="vote-item-to">\u2192 ${escapeHtml(vote.nominee)}</strong>
+                <button class="btn-delete" onclick="deleteVote(${vote.index})">\u2715</button>
             </div>
-            <p style="margin-top:0.3rem; font-style:italic; color:var(--text-medium, #666);">"${escapeHtml(vote.motivation)}"</p>
+            <p class="vote-item-motivation">"${escapeHtml(vote.motivation)}"</p>
         </div>
     `).join('');
 }
 
-// === HELPERS ===
-function getTally(votes) {
-    const tally = {};
-    votes.forEach(vote => {
-        tally[vote.nominee] = (tally[vote.nominee] || 0) + 1;
+// === EXPORT VOOR REVEAL ===
+function exportForReveal() {
+    const votes = getVotes();
+    if (votes.length === 0) {
+        alert('Geen stemmen om te exporteren!');
+        return;
+    }
+
+    const grouped = {};
+    votes.forEach(v => {
+        if (!grouped[v.nominee]) grouped[v.nominee] = [];
+        grouped[v.nominee].push(v.motivation);
     });
-    return tally;
+
+    const sorted = Object.entries(grouped)
+        .map(([name, motivations]) => ({ name, votes: motivations.length, motivations }))
+        .sort((a, b) => a.votes - b.votes);
+
+    const code = `const REVEAL_DATA = {\n    nominees: [\n${sorted.map(n => `        {\n            name: "${n.name}",\n            votes: ${n.votes},\n            motivations: [\n${n.motivations.map(m => `                "${m.replace(/"/g, '\\"')}"`).join(',\n')}\n            ]\n        }`).join(',\n')}\n    ]\n};`;
+
+    navigator.clipboard.writeText(code).then(() => {
+        alert('Code gekopieerd naar klembord!\n\nPlak dit in js/reveal-data.js');
+    }).catch(() => {
+        prompt('Kopieer deze code en plak in js/reveal-data.js:', code);
+    });
 }
 
-function formatDate(timestamp) {
-    if (!timestamp) return '';
-    const d = new Date(timestamp);
-    if (isNaN(d)) return '';
-    return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-}
-
+// === HELPERS ===
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text || '';

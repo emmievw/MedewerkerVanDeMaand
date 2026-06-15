@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Medewerker van de Maand</title>
-    <link rel="stylesheet" href="css/style.css?v=3">
+    <link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
     <nav class="navbar">
@@ -35,45 +35,47 @@
             <section id="dashboard-section" style="display:none;">
                 <div class="dashboard-header">
                     <h1>📊 Resultaten</h1>
-                    <button id="refresh-btn" class="btn-secondary">🔄 Vernieuwen</button>
+                    <span class="stat-label" id="vote-count-label"></span>
                 </div>
 
-                <!-- Stats -->
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-votes">-</div>
-                        <div class="stat-label">Stemmen</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-remaining">-</div>
-                        <div class="stat-label">Resterend</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="current-leader">-</div>
-                        <div class="stat-label">Koploper</div>
-                    </div>
+                <!-- Stem toevoegen -->
+                <div class="vote-form admin-add-form">
+                    <h2>➕ Stem toevoegen</h2>
+                    <p class="admin-hint">Voer hier de stemmen in die je per email ontvangt</p>
+                    <form id="add-vote-form">
+                        <div class="form-group">
+                            <label for="add-nominee">Genomineerde</label>
+                            <input type="text" id="add-nominee" required placeholder="Naam collega">
+                        </div>
+                        <div class="form-group">
+                            <label for="add-motivation">Motivatie</label>
+                            <textarea id="add-motivation" required placeholder="Waarom deze collega?"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Stem toevoegen</button>
+                    </form>
                 </div>
 
                 <!-- Ranking -->
-                <div class="vote-form">
-                    <h2 style="margin-bottom: 1rem;">🏆 Ranking</h2>
+                <div class="vote-form" style="margin-top: 1.5rem;">
+                    <h2>🏆 Ranking</h2>
                     <div id="ranking-list">
-                        <p class="loading">Laden...</p>
+                        <p class="loading">Nog geen stemmen ingevoerd.</p>
                     </div>
                 </div>
 
                 <!-- Alle stemmen -->
                 <div class="vote-form" style="margin-top: 1.5rem;">
-                    <h2 style="margin-bottom: 1rem;">📝 Alle stemmen</h2>
+                    <h2>📝 Alle stemmen</h2>
                     <div id="votes-list">
-                        <p class="loading">Laden...</p>
+                        <p class="loading">Nog geen stemmen ingevoerd.</p>
                     </div>
                 </div>
 
-                <!-- Setup instructie (verborgen na configuratie) -->
-                <div id="setup-notice" class="vote-form" style="margin-top: 1.5rem; display: none;">
-                    <h2 style="margin-bottom: 0.5rem;">⚠️ Sheet ID nodig</h2>
-                    <p style="color: var(--text-medium);">Open je Google Sheet, kopieer het ID uit de URL en vul het in in <code>js/admin.js</code></p>
+                <!-- Acties -->
+                <div class="vote-form admin-actions" style="margin-top: 1.5rem;">
+                    <h2>⚙️ Acties</h2>
+                    <button id="export-reveal-btn" class="btn-secondary">📤 Exporteer voor reveal-pagina</button>
+                    <button id="clear-btn" class="btn-danger">🗑️ Wis alle stemmen</button>
                 </div>
             </section>
         </div>
@@ -83,6 +85,6 @@
         <p>© 2026 — Medewerker van de Maand (Admin)</p>
     </footer>
 
-    <script src="js/admin.js?v=4"></script>
+    <script src="js/admin.js?v=5"></script>
 </body>
 </html>
