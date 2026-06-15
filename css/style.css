@@ -1,17 +1,20 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-    --afas-green: #00a651;
-    --afas-green-dark: #008c44;
-    --afas-green-light: #e6f7ef;
+    --oo-red: #c8102e;
+    --oo-red-dark: #a50d24;
+    --oo-blue: #005baa;
+    --oo-blue-dark: #004a8c;
+    --oo-blue-light: #e8f1fa;
+    --oo-red-light: #fce8ec;
     --text-dark: #1a1a1a;
     --text-medium: #4a4a4a;
     --text-light: #7a7a7a;
     --bg-white: #ffffff;
-    --bg-light: #fafbfc;
-    --border: #e8ecf0;
+    --bg-light: #f7f9fc;
+    --border: #e0e6ed;
     --radius: 12px;
-    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+    --shadow: 0 2px 12px rgba(0,43,100,0.08);
 }
 
 body {
@@ -42,7 +45,7 @@ body {
 
 .logo {
     font-weight: 700;
-    color: var(--afas-green);
+    color: var(--oo-red);
     font-size: 1.1rem;
 }
 
@@ -69,8 +72,8 @@ body {
 }
 
 .nav-tab.active {
-    background: var(--afas-green-light);
-    color: var(--afas-green);
+    background: var(--oo-blue-light);
+    color: var(--oo-blue);
     font-weight: 600;
 }
 
@@ -123,14 +126,14 @@ body {
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: var(--afas-green);
+    border-color: var(--oo-blue);
 }
 
 /* Buttons */
 .btn-primary {
     width: 100%;
     padding: 1rem;
-    background: var(--afas-green);
+    background: var(--oo-blue);
     color: white;
     border: none;
     border-radius: 8px;
@@ -140,7 +143,7 @@ body {
     transition: all 0.2s;
 }
 
-.btn-primary:hover { background: var(--afas-green-dark); transform: translateY(-1px); }
+.btn-primary:hover { background: var(--oo-blue-dark); transform: translateY(-1px); }
 .btn-primary:disabled, .btn-disabled { background: #ccc; cursor: not-allowed; transform: none; }
 
 .btn-big { padding: 1.2rem 3rem; font-size: 1.2rem; width: auto; border-radius: 50px; }
@@ -185,7 +188,7 @@ body {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
 }
-.success-icon { font-size: 3rem; color: var(--afas-green); margin-bottom: 1rem; }
+.success-icon { font-size: 3rem; color: var(--oo-blue); margin-bottom: 1rem; }
 .error-message { color: #e74c3c; margin-top: 1rem; }
 .loading { text-align: center; padding: 2rem; color: var(--text-light); }
 
@@ -206,10 +209,10 @@ body {
     border-bottom: 1px solid var(--border);
 }
 .ranking-item:last-child { border-bottom: none; }
-.ranking-pos { min-width: 2.5rem; font-size: 1.3rem; font-weight: 700; color: var(--afas-green); }
+.ranking-pos { min-width: 2.5rem; font-size: 1.3rem; font-weight: 700; color: var(--oo-red); }
 .ranking-name { flex: 1; font-weight: 500; }
 .ranking-count {
-    background: var(--afas-green);
+    background: var(--oo-blue);
     color: white;
     padding: 0.2rem 0.7rem;
     border-radius: 20px;
@@ -220,7 +223,7 @@ body {
 .vote-item { padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
 .vote-item:last-child { border-bottom: none; }
 .vote-item-header { display: flex; justify-content: space-between; align-items: center; }
-.vote-item-to { color: var(--afas-green); font-weight: 600; }
+.vote-item-to { color: var(--oo-blue); font-weight: 600; }
 .vote-item-motivation { color: var(--text-medium); font-style: italic; margin-top: 0.3rem; }
 
 /* Reveal */
@@ -254,15 +257,15 @@ body {
 }
 
 .reveal-slide .nominee-votes {
-    color: var(--afas-green);
+    color: var(--oo-blue);
     font-weight: 700;
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
 }
 
 .reveal-slide blockquote {
-    background: var(--afas-green-light);
-    border-left: 3px solid var(--afas-green);
+    background: var(--oo-blue-light);
+    border-left: 3px solid var(--oo-blue);
     padding: 0.8rem 1.2rem;
     margin: 0.5rem 0;
     border-radius: 0 8px 8px 0;
@@ -272,7 +275,7 @@ body {
 }
 
 .reveal-slide.winner .nominee-name {
-    color: var(--afas-green);
+    color: var(--oo-red);
     font-size: 3rem;
 }
 
@@ -292,7 +295,7 @@ body {
 }
 .reveal-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--afas-green), #f0c040);
+    background: linear-gradient(90deg, var(--oo-blue), var(--oo-red));
     transition: width 0.4s ease;
     width: 0;
 }
