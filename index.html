@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medewerker van de Maand - Juni 2026</title>
-    <link rel="stylesheet" href="css/style.css?v=6">
+    <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
     <nav class="navbar">
@@ -52,7 +52,6 @@
                 </div>
 
                 <div id="already-voted" class="info-message" style="display:none;">
-                    <div class="info-icon">&#8505;&#65039;</div>
                     <h2>Je hebt al gestemd</h2>
                     <p>Bedankt voor je deelname!</p>
                 </div>
@@ -60,7 +59,6 @@
 
             <!-- === TAB 2: ADMIN === -->
             <section id="tab-admin" class="tab-content">
-                <!-- Login -->
                 <div id="admin-login" class="vote-form" style="max-width:400px; margin:2rem auto;">
                     <h2>&#128274; Admin Login</h2>
                     <form id="login-form">
@@ -73,41 +71,20 @@
                     </form>
                 </div>
 
-                <!-- Dashboard (na login) -->
                 <div id="admin-dashboard" style="display:none;">
                     <div class="dashboard-header">
                         <h1>&#128202; Resultaten</h1>
                         <span id="vote-count-label" class="stat-label"></span>
                     </div>
 
-                    <div class="vote-form admin-add-form">
-                        <h2>&#10133; Stem toevoegen</h2>
-                        <p class="admin-hint">Voer hier de stemmen in die je via Teams/email ontvangt</p>
-                        <form id="add-vote-form">
-                            <div class="form-group">
-                                <label for="add-nominee">Genomineerde</label>
-                                <input type="text" id="add-nominee" required placeholder="Naam collega">
-                            </div>
-                            <div class="form-group">
-                                <label for="add-motivation">Motivatie</label>
-                                <textarea id="add-motivation" required placeholder="Waarom deze collega?"></textarea>
-                            </div>
-                            <button type="submit" class="btn-primary">Stem toevoegen</button>
-                        </form>
-                    </div>
-
                     <div class="vote-form" style="margin-top:1.5rem;">
                         <h2>&#127942; Ranking</h2>
-                        <div id="ranking-list"><p class="loading">Nog geen stemmen.</p></div>
+                        <div id="ranking-list"><p class="loading">Laden...</p></div>
                     </div>
 
                     <div class="vote-form" style="margin-top:1.5rem;">
                         <h2>&#128221; Alle stemmen</h2>
-                        <div id="votes-list"><p class="loading">Nog geen stemmen.</p></div>
-                    </div>
-
-                    <div class="vote-form admin-actions" style="margin-top:1.5rem;">
-                        <button id="clear-btn" class="btn-danger">&#128465; Wis alle stemmen</button>
+                        <div id="votes-list"><p class="loading">Laden...</p></div>
                     </div>
                 </div>
             </section>
@@ -119,13 +96,11 @@
                     <h1>De Onthulling</h1>
                     <p class="hero-sub">Wie wordt de Medewerker van de Maand?</p>
                     <button id="start-reveal-btn" class="btn-primary btn-big">Start de onthulling &#8594;</button>
-                    <p id="reveal-no-data" class="admin-hint" style="display:none;">Nog geen stemmen ingevoerd in Admin.</p>
+                    <p id="reveal-no-data" class="admin-hint" style="display:none;">Nog geen stemmen binnengekomen.</p>
                 </div>
 
                 <div id="reveal-show" style="display:none;">
-                    <div id="reveal-slide" class="reveal-slide">
-                        <!-- Wordt dynamisch gevuld -->
-                    </div>
+                    <div id="reveal-slide" class="reveal-slide"></div>
                     <div class="reveal-nav">
                         <button id="reveal-next-btn" class="btn-primary">Volgende &#8594;</button>
                     </div>
@@ -144,6 +119,10 @@
         <p>&copy; 2026 - Medewerker van de Maand</p>
     </footer>
 
-    <script src="js/app.js?v=6"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+    <script src="js/app.js?v=7"></script>
 </body>
 </html>
