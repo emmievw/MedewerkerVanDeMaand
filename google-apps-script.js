@@ -131,6 +131,5 @@ function getResultsData() {
     votes: votes.reverse()
   };
 
-  return ContentService.createTextOutput(JSON.stringify(result))
-    .setMimeType(ContentService.MimeType.JSON);
+  return result;
 }

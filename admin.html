@@ -34,37 +34,26 @@
             <!-- Dashboard sectie -->
             <section id="dashboard-section" style="display:none;">
                 <div class="dashboard-header">
-                    <h1>Resultaten</h1>
-                    <button id="refresh-btn" class="btn-secondary">Vernieuwen</button>
+                    <h1>Resultaten bekijken</h1>
                 </div>
 
-                <div class="stats-overview">
-                    <div class="stat-card">
-                        <span class="stat-card-number" id="total-votes">0</span>
-                        <span class="stat-card-label">Stemmen uitgebracht</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-card-number" id="total-remaining">25</span>
-                        <span class="stat-card-label">Nog niet gestemd</span>
-                    </div>
-                    <div class="stat-card highlight">
-                        <span class="stat-card-number" id="current-leader">—</span>
-                        <span class="stat-card-label">Huidige koploper</span>
-                    </div>
-                </div>
+                <div class="vote-form" style="text-align: center;">
+                    <p style="margin-bottom: 1.5rem; color: var(--text-medium);">De stemmen staan in je Google Drive. Klik hieronder om ze te bekijken:</p>
+                    
+                    <a href="https://docs.google.com/spreadsheets" target="_blank" class="btn-primary" style="display: inline-block; text-decoration: none; margin-bottom: 1rem;">
+                        📊 Open Google Sheets
+                    </a>
 
-                <div class="results-section">
-                    <h2>Ranglijst</h2>
-                    <div id="ranking-list" class="ranking-list">
-                        <p class="loading">Laden...</p>
-                    </div>
-                </div>
+                    <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-light);">
+                        Zoek naar: <strong>"Medewerker van de Maand - Stemmen"</strong>
+                    </p>
 
-                <div class="votes-section">
-                    <h2>Alle stemmen</h2>
-                    <div id="votes-list" class="votes-list">
-                        <p class="loading">Laden...</p>
-                    </div>
+                    <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);">
+
+                    <p style="margin-bottom: 1rem; color: var(--text-medium);">Of bekijk de live resultaten als JSON:</p>
+                    <a href="https://script.google.com/macros/s/AKfycbxIBntsuKYCDNf1UULhWw8T6SkTKOW7gNqvw-mQpciUREsC9Ux-Zijl0gqsKbrjPodIkQ/exec?action=results" target="_blank" class="btn-secondary" style="display: inline-block; text-decoration: none;">
+                        📋 Bekijk live resultaten
+                    </a>
                 </div>
             </section>
         </div>

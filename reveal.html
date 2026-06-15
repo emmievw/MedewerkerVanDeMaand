@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medewerker van de Maand - De Onthulling!</title>
+    <link rel="stylesheet" href="css/reveal.css">
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Intro scherm -->
+    <section class="slide active" id="slide-intro">
+        <div class="slide-content">
+            <div class="intro-emoji">🏆</div>
+            <h1>Medewerker van de Maand</h1>
+            <p class="subtitle">Juni 2026</p>
+            <button class="btn-next" onclick="nextSlide()">Start de onthulling →</button>
+        </div>
+    </section>
+
+    <!-- Genomineerden (worden dynamisch gegenereerd) -->
+    <div id="nominee-slides"></div>
+
+    <!-- Winnaar scherm -->
+    <section class="slide" id="slide-winner">
+        <div class="slide-content">
+            <div class="winner-badge">👑</div>
+            <p class="winner-label">De winnaar is...</p>
+            <h1 class="winner-name" id="winner-name"></h1>
+            <div class="winner-votes" id="winner-votes"></div>
+            <div class="winner-motivations" id="winner-motivations"></div>
+        </div>
+    </section>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="nav-hint" id="nav-hint">Klik of druk → om verder te gaan</div>
+
+    <script src="js/reveal-data.js"></script>
+    <script src="js/reveal.js"></script>
+</body>
+</html>
