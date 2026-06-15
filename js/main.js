@@ -1,65 +1,66 @@
-// Medewerker van de Maand - Confetti animatie
-(function () {
-    const canvas = document.getElementById('confetti-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const colors = ['#f0c040', '#ff6b6b', '#4ecdc4', '#45b7d1', '#fff'];
+// === CONFIGURATIE ===
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIBntsuKYCDNf1UULhWw8T6SkTKOW7gNqvw-mQpciUREsC9Ux-Zijl0gqsKbrjPodIkQ/exec';
 
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+// === INITIALISATIE ===
+document.addEventListener('DOMContentLoaded', () => {
+    checkAlreadyVoted();
+    document.getElementById('vote-form').addEventListener('submit', handleVote);
+});
+
+function checkAlreadyVoted() {
+    const voted = localStorage.getItem('mvdm-voted-juni-2026');
+    if (voted) {
+        document.getElementById('vote-form').style.display = 'none';
+        document.getElementById('already-voted').style.display = 'block';
     }
-    window.addEventListener('resize', resize);
-    resize();
+}
 
-    function createParticle() {
-        return {
-            x: Math.random() * canvas.width,
-            y: -10,
-            size: Math.random() * 8 + 4,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            speedY: Math.random() * 3 + 2,
-            speedX: (Math.random() - 0.5) * 4,
-            rotation: Math.random() * 360,
-            rotationSpeed: (Math.random() - 0.5) * 10,
-            opacity: 1
-        };
+async function handleVote(e) {
+    e.preventDefault();
+
+    const nominee = document.getElementById('nominee').value.trim();
+    const motivation = document.getElementById('motivation').value.trim();
+    const submitBtn = document.getElementById('submit-btn');
+    const errorDiv = document.getElementById('error-message');
+
+    if (!nominee) {
+        showError('Vul een naam in!');
+        return;
     }
 
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Disable button
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.btn-text').style.display = 'none';
+    submitBtn.querySelector('.btn-loading').style.display = 'inline';
+    errorDiv.style.display = 'none';
 
-        // Voeg nieuwe confetti toe gedurende de eerste 3 seconden
-        if (performance.now() < 3000) {
-            for (let i = 0; i < 5; i++) {
-                particles.push(createParticle());
-            }
-        }
-
-        particles.forEach((p, index) => {
-            p.y += p.speedY;
-            p.x += p.speedX;
-            p.rotation += p.rotationSpeed;
-            p.opacity -= 0.003;
-
-            if (p.y > canvas.height || p.opacity <= 0) {
-                particles.splice(index, 1);
-                return;
-            }
-
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate((p.rotation * Math.PI) / 180);
-            ctx.globalAlpha = p.opacity;
-            ctx.fillStyle = p.color;
-            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
-            ctx.restore();
+    try {
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'vote',
+                nominee: nominee,
+                motivation: motivation,
+                timestamp: new Date().toISOString()
+            })
         });
 
-        if (particles.length > 0) {
-            requestAnimationFrame(animate);
-        }
-    }
+        localStorage.setItem('mvdm-voted-juni-2026', nominee);
+        document.getElementById('vote-form').style.display = 'none';
+        document.getElementById('success-message').style.display = 'block';
 
-    animate();
-})();
+    } catch (error) {
+        showError('Er ging iets mis. Probeer het opnieuw.');
+        submitBtn.disabled = false;
+        submitBtn.querySelector('.btn-text').style.display = 'inline';
+        submitBtn.querySelector('.btn-loading').style.display = 'none';
+    }
+}
+
+function showError(message) {
+    const errorDiv = document.getElementById('error-message');
+    document.getElementById('error-text').textContent = message;
+    errorDiv.style.display = 'block';
+}

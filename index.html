@@ -3,52 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medewerker van de Maand - Juni 2026</title>
+    <title>Medewerker van de Maand - Stemmen</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <canvas id="confetti-canvas"></canvas>
+    <nav class="navbar">
+        <div class="nav-content">
+            <span class="logo">✨ Medewerker van de Maand</span>
+            <span class="nav-month">Juni 2026</span>
+        </div>
+    </nav>
 
-    <div class="container">
-        <header>
-            <p class="subtitle">🏆 Juni 2026</p>
-            <h1>Medewerker van de Maand</h1>
-        </header>
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <div class="hero-emoji">🏆</div>
+                <h1>Wie is jouw held?</h1>
+                <p class="hero-sub">Nomineer de collega die volgens jou dé <strong>Medewerker van de Maand</strong> verdient. Één stem, één motivatie — make it count!</p>
+            </section>
 
-        <main class="card">
-            <div class="photo-wrapper">
-                <div class="photo-placeholder">
-                    <span>📸</span>
+            <section class="vote-section">
+                <form id="vote-form" class="vote-form">
+                    <div class="form-group">
+                        <label for="nominee">Op wie stem je?</label>
+                        <input type="text" id="nominee" required placeholder="Typ de naam van je collega..." autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motivation">Waarom juist deze persoon?</label>
+                        <textarea id="motivation" rows="4" placeholder="Vertel wat deze collega zo bijzonder maakt..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submit-btn">
+                        <span class="btn-text">🎉 Stem indienen</span>
+                        <span class="btn-loading" style="display:none;">Even geduld...</span>
+                    </button>
+                </form>
+
+                <div id="success-message" class="success-message" style="display:none;">
+                    <div class="success-icon">✓</div>
+                    <h2>Bedankt voor je stem!</h2>
+                    <p>Je stem is succesvol ingediend. De winnaar wordt binnenkort bekendgemaakt.</p>
                 </div>
-            </div>
-            <div class="info">
-                <h2 class="name">Voornaam Achternaam</h2>
-                <p class="role">Functietitel — Team X</p>
-                <blockquote class="motivation">
-                    "Altijd bereid om collega's te helpen, brengt energie en positiviteit naar het team, 
-                    en levert consequent werk van hoge kwaliteit af. Een echte teamspeler!"
-                </blockquote>
-                <div class="stats">
-                    <div class="stat">
-                        <span class="stat-number">42</span>
-                        <span class="stat-label">Nominaties</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">3</span>
-                        <span class="stat-label">Maanden op rij genomineerd</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">∞</span>
-                        <span class="stat-label">Koppen koffie gehaald</span>
-                    </div>
-                </div>
-            </div>
-        </main>
 
-        <footer>
-            <p>Gefeliciteerd! 🎉</p>
-        </footer>
-    </div>
+                <div id="already-voted" class="info-message" style="display:none;">
+                    <div class="info-icon">ℹ️</div>
+                    <h2>Je hebt al gestemd</h2>
+                    <p>Je kunt maar één keer stemmen. Bedankt voor je deelname!</p>
+                </div>
+
+                <div id="error-message" class="error-message" style="display:none;">
+                    <p id="error-text"></p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 — Medewerker van de Maand</p>
+    </footer>
 
     <script src="js/main.js"></script>
 </body>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Medewerker van de Maand</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <span class="logo">Medewerker van de Maand</span>
+            <span class="nav-month">Admin</span>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="container">
+            <!-- Login sectie -->
+            <section id="login-section" class="login-section">
+                <h1>Admin Login</h1>
+                <form id="login-form" class="vote-form" style="max-width: 400px; margin: 0 auto;">
+                    <div class="form-group">
+                        <label for="admin-password">Wachtwoord</label>
+                        <input type="password" id="admin-password" required placeholder="Voer het admin wachtwoord in">
+                    </div>
+                    <button type="submit" class="btn-primary">Inloggen</button>
+                    <div id="login-error" class="error-message" style="display:none;">
+                        <p>Onjuist wachtwoord</p>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Dashboard sectie -->
+            <section id="dashboard-section" style="display:none;">
+                <div class="dashboard-header">
+                    <h1>Resultaten</h1>
+                    <button id="refresh-btn" class="btn-secondary">Vernieuwen</button>
+                </div>
+
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <span class="stat-card-number" id="total-votes">0</span>
+                        <span class="stat-card-label">Stemmen uitgebracht</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-card-number" id="total-remaining">25</span>
+                        <span class="stat-card-label">Nog niet gestemd</span>
+                    </div>
+                    <div class="stat-card highlight">
+                        <span class="stat-card-number" id="current-leader">—</span>
+                        <span class="stat-card-label">Huidige koploper</span>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <h2>Ranglijst</h2>
+                    <div id="ranking-list" class="ranking-list">
+                        <p class="loading">Laden...</p>
+                    </div>
+                </div>
+
+                <div class="votes-section">
+                    <h2>Alle stemmen</h2>
+                    <div id="votes-list" class="votes-list">
+                        <p class="loading">Laden...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 — Medewerker van de Maand (Admin)</p>
+    </footer>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
