@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sessionStorage.getItem('mvdm-admin-auth')) showAdmin();
 
     // Reveal
+    document.getElementById('reveal-login-form').addEventListener('submit', handleRevealLogin);
+    if (sessionStorage.getItem('mvdm-admin-auth')) showReveal();
     document.getElementById('start-reveal-btn').addEventListener('click', startReveal);
     document.getElementById('reveal-next-btn').addEventListener('click', nextRevealSlide);
 });
@@ -105,6 +107,25 @@ function showAdmin() {
     document.getElementById('admin-login').style.display = 'none';
     document.getElementById('admin-dashboard').style.display = 'block';
     loadVotes();
+}
+
+// === REVEAL LOGIN ===
+async function handleRevealLogin(e) {
+    e.preventDefault();
+    const pw = document.getElementById('reveal-password').value;
+    const hash = await sha256(pw);
+    if (hash === ADMIN_HASH) {
+        sessionStorage.setItem('mvdm-admin-auth', 'true');
+        document.getElementById('reveal-login-error').style.display = 'none';
+        showReveal();
+    } else {
+        document.getElementById('reveal-login-error').style.display = 'block';
+    }
+}
+
+function showReveal() {
+    document.getElementById('reveal-login').style.display = 'none';
+    document.getElementById('reveal-start').style.display = 'block';
 }
 
 function loadVotes() {

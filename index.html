@@ -67,6 +67,7 @@
             <section id="tab-admin" class="tab-content">
                 <div id="admin-login" class="vote-form" style="max-width:400px; margin:2rem auto;">
                     <h2>&#128274; Admin Login</h2>
+                    <p class="admin-hint" style="margin-bottom:1rem;">Helaas, je moet hier inloggen. Wil je meer weten? Dan moet je wachten tot de onthulling op 25 juni!</p>
                     <form id="login-form">
                         <div class="form-group">
                             <label for="admin-password">Wachtwoord</label>
@@ -97,7 +98,20 @@
 
             <!-- === TAB 3: REVEAL === -->
             <section id="tab-reveal" class="tab-content">
-                <div id="reveal-start" class="reveal-intro">
+                <div id="reveal-login" class="vote-form" style="max-width:400px; margin:2rem auto;">
+                    <h2>&#127881; Reveal Login</h2>
+                    <p class="admin-hint" style="margin-bottom:1rem;">De onthulling is op 25 juni. Log in om de reveal te starten.</p>
+                    <form id="reveal-login-form">
+                        <div class="form-group">
+                            <label for="reveal-password">Wachtwoord</label>
+                            <input type="password" id="reveal-password" required placeholder="Voer het wachtwoord in">
+                        </div>
+                        <button type="submit" class="btn-primary">Inloggen</button>
+                        <div id="reveal-login-error" class="error-message" style="display:none;"><p>Onjuist wachtwoord</p></div>
+                    </form>
+                </div>
+
+                <div id="reveal-start" class="reveal-intro" style="display:none;">
                     <div class="hero-emoji">&#127881;</div>
                     <h1>De Onthulling</h1>
                     <p class="hero-sub">Wie wordt de Medewerker van de Maand?</p>
