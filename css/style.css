@@ -435,6 +435,43 @@ body {
     margin-bottom: 1rem;
 }
 
+/* Stempagina stappen */
+.vote-steps {
+    margin: 1rem 0 1.5rem 1.5rem;
+    color: var(--text-medium);
+    line-height: 2;
+}
+
+.vote-steps li {
+    padding-left: 0.5rem;
+}
+
+.vote-example {
+    background: var(--afas-green-light);
+    border-left: 4px solid var(--afas-green);
+    padding: 1rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1.5rem 0;
+}
+
+.vote-example-label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 0.3rem;
+}
+
+.vote-example-text {
+    color: var(--text-dark);
+    font-style: italic;
+}
+
+.vote-deadline {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    margin-top: 1.5rem;
+    font-weight: 500;
+}
+
 .ranking-pos {
     min-width: 2.5rem;
     font-size: 1.3rem;

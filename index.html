@@ -23,39 +23,21 @@
             </section>
 
             <section class="vote-section">
-                <form id="vote-form" class="vote-form">
-                    <div class="form-group">
-                        <label for="nominee">Op wie stem je?</label>
-                        <input type="text" id="nominee" required placeholder="Typ de naam van je collega..." autocomplete="off">
+                <div class="vote-form">
+                    <h2>🗳️ Hoe stem je?</h2>
+                    <p style="color: var(--text-medium); line-height: 1.8; margin-top: 1rem;">
+                        Stuur een berichtje naar <strong>Emma</strong> in Teams met:
+                    </p>
+                    <ol class="vote-steps">
+                        <li>De naam van de collega die je nomineert</li>
+                        <li>Een korte motivatie waarom juist deze persoon</li>
+                    </ol>
+                    <div class="vote-example">
+                        <p class="vote-example-label">Voorbeeld:</p>
+                        <p class="vote-example-text">"Ik nomineer <strong>Jan</strong> omdat hij altijd iedereen helpt en overal positieve energie brengt!"</p>
                     </div>
-
-                    <div class="form-group">
-                        <label for="motivation">Waarom juist deze persoon?</label>
-                        <textarea id="motivation" rows="4" placeholder="Vertel wat deze collega zo bijzonder maakt..." required></textarea>
-                    </div>
-
-                    <button type="submit" class="btn-primary btn-disabled" id="submit-btn" disabled>
-                        <span class="btn-text">🎉 Stem indienen</span>
-                        <span class="btn-loading" style="display:none;">Even geduld...</span>
-                    </button>
-                </form>
-
-                <div id="success-message" class="success-message" style="display:none;">
-                    <div class="success-icon">✓</div>
-                    <h2>Bedankt voor je stem!</h2>
-                    <p>Je stem is succesvol ingediend.</p>
-                    <p style="margin-top: 1rem; color: var(--text-medium);">🗓️ De winnaar wordt op <strong>25 juni</strong> bekendgemaakt!</p>
-                </div>
-
-                <div id="already-voted" class="info-message" style="display:none;">
-                    <div class="info-icon">ℹ️</div>
-                    <h2>Je hebt al gestemd</h2>
-                    <p>Je kunt maar één keer stemmen. Bedankt voor je deelname!</p>
-                    <p style="margin-top: 1rem; color: var(--text-medium);">🗓️ De winnaar wordt op <strong>25 juni</strong> bekendgemaakt!</p>
-                </div>
-
-                <div id="error-message" class="error-message" style="display:none;">
-                    <p id="error-text"></p>
+                    <p class="vote-deadline">⏰ Stemmen kan tot en met <strong>24 juni</strong></p>
+                    <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 1rem;">🗓️ De winnaar wordt op <strong>25 juni</strong> bekendgemaakt!</p>
                 </div>
             </section>
         </div>
@@ -64,7 +46,5 @@
     <footer class="footer">
         <p>© 2026 — Medewerker van de Maand</p>
     </footer>
-
-    <script src="js/main.js?v=4"></script>
 </body>
 </html>
