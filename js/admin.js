@@ -34,10 +34,7 @@ function showDashboard() {
 
 async function loadResults() {
     try {
-        const response = await fetch(SCRIPT_URL + '?action=results', {
-            redirect: 'follow'
-        });
-        const data = await response.json();
+        const data = await fetchJSONP(SCRIPT_URL + '?action=results');
         const votes = data.votes || [];
 
         displayStats(votes);
@@ -45,10 +42,30 @@ async function loadResults() {
         displayVotes(votes);
     } catch (error) {
         document.getElementById('ranking-list').innerHTML =
-            '<p class="loading">Kon resultaten niet laden. Heb je het script opnieuw gedeployed als nieuwe versie?</p>';
+            '<p class="loading">Kon resultaten niet laden. Probeer te vernieuwen.</p>';
         document.getElementById('votes-list').innerHTML =
             '<p class="loading">Kon stemmen niet laden.</p>';
     }
+}
+
+// JSONP: omzeilt CORS door een script-tag te gebruiken
+function fetchJSONP(url) {
+    return new Promise((resolve, reject) => {
+        const callbackName = 'jsonp_' + Date.now();
+        window[callbackName] = function(data) {
+            resolve(data);
+            delete window[callbackName];
+            script.remove();
+        };
+        const script = document.createElement('script');
+        script.src = url + '&callback=' + callbackName;
+        script.onerror = () => {
+            reject(new Error('JSONP request failed'));
+            delete window[callbackName];
+            script.remove();
+        };
+        document.head.appendChild(script);
+    });
 }
 
 function displayStats(votes) {

@@ -24,9 +24,19 @@ const SHEET_NAME = 'Juni 2026';
 
 function doGet(e) {
   const action = e.parameter.action;
+  const callback = e.parameter.callback;
 
   if (action === 'results') {
-    return getResults();
+    const result = getResultsData();
+    const json = JSON.stringify(result);
+    
+    // JSONP support: als er een callback parameter is, wrap de response
+    if (callback) {
+      return ContentService.createTextOutput(callback + '(' + json + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService.createTextOutput(json)
+      .setMimeType(ContentService.MimeType.JSON);
   }
 
   return ContentService.createTextOutput(JSON.stringify({ error: 'Ongeldige actie' }))
@@ -85,6 +95,12 @@ function submitVote(data) {
 }
 
 function getResults() {
+  const result = getResultsData();
+  return ContentService.createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function getResultsData() {
   const sheet = getOrCreateSheet();
   const data = sheet.getDataRange().getValues();
 
