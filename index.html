@@ -3,48 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medewerker van de Maand - Stemmen</title>
-    <link rel="stylesheet" href="css/style.css?v=4">
+    <title>Medewerker van de Maand - Juni 2026</title>
+    <link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-content">
-            <span class="logo">✨ Medewerker van de Maand</span>
-            <span class="nav-month">Juni 2026</span>
+            <span class="logo">Medewerker van de Maand</span>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="stem">Stem</button>
+                <button class="nav-tab" data-tab="admin">Admin</button>
+                <button class="nav-tab" data-tab="reveal">Reveal</button>
+            </div>
         </div>
     </nav>
 
     <main class="main">
         <div class="container">
-            <section class="hero">
-                <div class="hero-emoji">🏆</div>
-                <h1>Medewerker van de Maand</h1>
-                <p class="hero-sub">Wie verdient de titel <strong>Medewerker van de Maand Juni</strong>? Nomineer je collega en schrijf een korte motivatie.</p>
-            </section>
 
-            <section class="vote-section">
-                <div class="vote-form">
-                    <h2>🗳️ Hoe stem je?</h2>
-                    <p style="color: var(--text-medium); line-height: 1.8; margin-top: 1rem;">
-                        Stuur een berichtje naar <strong>Emma</strong> in Teams met:
-                    </p>
-                    <ol class="vote-steps">
-                        <li>De naam van de collega die je nomineert</li>
-                        <li>Een korte motivatie waarom juist deze persoon</li>
-                    </ol>
-                    <div class="vote-example">
-                        <p class="vote-example-label">Voorbeeld:</p>
-                        <p class="vote-example-text">"Ik nomineer <strong>Jan</strong> omdat hij altijd iedereen helpt en overal positieve energie brengt!"</p>
+            <!-- === TAB 1: STEMMEN === -->
+            <section id="tab-stem" class="tab-content active">
+                <div class="hero">
+                    <div class="hero-emoji">&#127942;</div>
+                    <h1>Medewerker van de Maand</h1>
+                    <p class="hero-sub">Wie verdient de titel <strong>Medewerker van de Maand Juni</strong>? Nomineer je collega!</p>
+                </div>
+
+                <form id="vote-form" class="vote-form">
+                    <div class="form-group">
+                        <label for="nominee">Op wie stem je?</label>
+                        <input type="text" id="nominee" required placeholder="Naam van je collega..." autocomplete="off">
                     </div>
-                    <p class="vote-deadline">⏰ Stemmen kan tot en met <strong>24 juni</strong></p>
-                    <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 1rem;">🗓️ De winnaar wordt op <strong>25 juni</strong> bekendgemaakt!</p>
+                    <div class="form-group">
+                        <label for="motivation">Waarom juist deze persoon?</label>
+                        <textarea id="motivation" rows="4" placeholder="Vertel wat deze collega zo bijzonder maakt..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary btn-disabled" id="submit-btn" disabled>
+                        <span class="btn-text">&#127881; Stem indienen</span>
+                        <span class="btn-loading" style="display:none;">Even geduld...</span>
+                    </button>
+                </form>
+
+                <div id="success-message" class="success-message" style="display:none;">
+                    <div class="success-icon">&#10003;</div>
+                    <h2>Bedankt voor je stem!</h2>
+                    <p>Je stem is succesvol ingediend.</p>
+                    <p style="margin-top:1rem; color:var(--text-medium);">De winnaar wordt op <strong>25 juni</strong> bekendgemaakt!</p>
+                </div>
+
+                <div id="already-voted" class="info-message" style="display:none;">
+                    <div class="info-icon">&#8505;&#65039;</div>
+                    <h2>Je hebt al gestemd</h2>
+                    <p>Bedankt voor je deelname!</p>
                 </div>
             </section>
+
+            <!-- === TAB 2: ADMIN === -->
+            <section id="tab-admin" class="tab-content">
+                <!-- Login -->
+                <div id="admin-login" class="vote-form" style="max-width:400px; margin:2rem auto;">
+                    <h2>&#128274; Admin Login</h2>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="admin-password">Wachtwoord</label>
+                            <input type="password" id="admin-password" required placeholder="Voer het admin wachtwoord in">
+                        </div>
+                        <button type="submit" class="btn-primary">Inloggen</button>
+                        <div id="login-error" class="error-message" style="display:none;"><p>Onjuist wachtwoord</p></div>
+                    </form>
+                </div>
+
+                <!-- Dashboard (na login) -->
+                <div id="admin-dashboard" style="display:none;">
+                    <div class="dashboard-header">
+                        <h1>&#128202; Resultaten</h1>
+                        <span id="vote-count-label" class="stat-label"></span>
+                    </div>
+
+                    <div class="vote-form admin-add-form">
+                        <h2>&#10133; Stem toevoegen</h2>
+                        <p class="admin-hint">Voer hier de stemmen in die je via Teams/email ontvangt</p>
+                        <form id="add-vote-form">
+                            <div class="form-group">
+                                <label for="add-nominee">Genomineerde</label>
+                                <input type="text" id="add-nominee" required placeholder="Naam collega">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-motivation">Motivatie</label>
+                                <textarea id="add-motivation" required placeholder="Waarom deze collega?"></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">Stem toevoegen</button>
+                        </form>
+                    </div>
+
+                    <div class="vote-form" style="margin-top:1.5rem;">
+                        <h2>&#127942; Ranking</h2>
+                        <div id="ranking-list"><p class="loading">Nog geen stemmen.</p></div>
+                    </div>
+
+                    <div class="vote-form" style="margin-top:1.5rem;">
+                        <h2>&#128221; Alle stemmen</h2>
+                        <div id="votes-list"><p class="loading">Nog geen stemmen.</p></div>
+                    </div>
+
+                    <div class="vote-form admin-actions" style="margin-top:1.5rem;">
+                        <button id="clear-btn" class="btn-danger">&#128465; Wis alle stemmen</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === TAB 3: REVEAL === -->
+            <section id="tab-reveal" class="tab-content">
+                <div id="reveal-start" class="reveal-intro">
+                    <div class="hero-emoji">&#127881;</div>
+                    <h1>De Onthulling</h1>
+                    <p class="hero-sub">Wie wordt de Medewerker van de Maand?</p>
+                    <button id="start-reveal-btn" class="btn-primary btn-big">Start de onthulling &#8594;</button>
+                    <p id="reveal-no-data" class="admin-hint" style="display:none;">Nog geen stemmen ingevoerd in Admin.</p>
+                </div>
+
+                <div id="reveal-show" style="display:none;">
+                    <div id="reveal-slide" class="reveal-slide">
+                        <!-- Wordt dynamisch gevuld -->
+                    </div>
+                    <div class="reveal-nav">
+                        <button id="reveal-next-btn" class="btn-primary">Volgende &#8594;</button>
+                    </div>
+                    <div class="reveal-progress">
+                        <div class="reveal-progress-fill" id="reveal-progress-fill"></div>
+                    </div>
+                </div>
+            </section>
+
         </div>
     </main>
 
+    <canvas id="confetti-canvas"></canvas>
+
     <footer class="footer">
-        <p>© 2026 — Medewerker van de Maand</p>
+        <p>&copy; 2026 - Medewerker van de Maand</p>
     </footer>
+
+    <script src="js/app.js?v=6"></script>
 </body>
 </html>
