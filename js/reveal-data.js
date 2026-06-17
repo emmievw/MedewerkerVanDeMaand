@@ -36,5 +36,6 @@ const REVEAL_DATA = {
         }
         // Voeg meer personen toe naar behoefte
         // De laatste in de lijst = de winnaar!
+        // Titel wordt automatisch gegenereerd uit motivaties
     ]
 };

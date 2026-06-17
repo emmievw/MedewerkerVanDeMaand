@@ -2,6 +2,44 @@
 let currentSlide = 0;
 let totalSlides = 0;
 
+// Keyword-gebaseerde titel generator
+const TITLE_RULES = [
+    { keywords: ['team', 'samenwerk', 'samen', 'verbind', 'groep'], title: 'De teamverbinder' },
+    { keywords: ['help', 'hulp', 'bijspring', 'ondersteun', 'steun', 'klaarstaa'], title: 'De helpende hand' },
+    { keywords: ['positie', 'energie', 'enthousiast', 'vrolijk', 'blij', 'lach', 'optimist'], title: 'De energiebron' },
+    { keywords: ['kennis', 'slim', 'expert', 'weet', 'kundig', 'technisch', 'oploss'], title: 'De kennisbron' },
+    { keywords: ['rustig', 'kalm', 'stabiel', 'betrouwbaar', 'constant', 'solide'], title: 'De rots in de branding' },
+    { keywords: ['creatief', 'idee', 'innovati', 'vernieuw', 'bedenk', 'origineel'], title: 'De creatieve geest' },
+    { keywords: ['humor', 'grappig', 'lol', 'sfeer', 'gezellig', 'leuk'], title: 'De sfeermaker' },
+    { keywords: ['inspireer', 'inspirat', 'motiveer', 'motivat', 'aanstek', 'voorbeeld'], title: 'De inspirator' },
+    { keywords: ['hard werk', 'inzet', 'ijver', 'doorzet', 'toegewijd', 'gedreven', 'werkpaard'], title: 'De doorzetter' },
+    { keywords: ['communicat', 'luister', 'praat', 'gesprek', 'communic'], title: 'De communicator' },
+    { keywords: ['leid', 'leider', 'stuur', 'richting', 'initiatief', 'voortouw'], title: 'De aanjager' },
+    { keywords: ['zorgzaam', 'zorg', 'warm', 'lief', 'attent', 'betrokken', 'empathi'], title: 'Het warme hart' },
+    { keywords: ['kwaliteit', 'nauwkeurig', 'precies', 'detail', 'grondig', 'zorgvuldig'], title: 'Het oog voor detail' },
+    { keywords: ['flexibel', 'aanpass', 'meega', 'veelzijdig', 'alles kan'], title: 'De alleskunner' },
+    { keywords: ['mentor', 'coach', 'leer', 'begel', 'uitleg', 'geduld'], title: 'De mentor' },
+];
+
+function generateTitle(motivations) {
+    const text = motivations.join(' ').toLowerCase();
+    let bestMatch = null;
+    let bestScore = 0;
+
+    for (const rule of TITLE_RULES) {
+        let score = 0;
+        for (const kw of rule.keywords) {
+            if (text.includes(kw)) score++;
+        }
+        if (score > bestScore) {
+            bestScore = score;
+            bestMatch = rule.title;
+        }
+    }
+
+    return bestMatch || 'De onmisbare collega';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     buildSlides();
     totalSlides = document.querySelectorAll('.slide').length;
@@ -19,19 +57,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function buildSlides() {
     const container = document.getElementById('nominee-slides');
-    const nominees = REVEAL_DATA.nominees;
-    const winner = nominees[nominees.length - 1];
+    // Filter: alleen nominees met 2 of meer stemmen
+    const allNominees = REVEAL_DATA.nominees.filter(n => n.votes >= 2);
+    if (allNominees.length === 0) return;
+
+    const winner = allNominees[allNominees.length - 1];
+    const others = allNominees.slice(0, -1);
 
     // Genereer slides voor elke genomineerde (behalve de winnaar)
-    nominees.slice(0, -1).forEach((nominee, index) => {
+    others.forEach((nominee, index) => {
+        const rank = others.length - index + 1; // +1 want winnaar is #1
+        const title = nominee.title || generateTitle(nominee.motivations);
         const slide = document.createElement('section');
         slide.className = 'slide';
         slide.innerHTML = `
             <div class="slide-content">
-                <p class="nominee-rank">#${nominees.length - index} genomineerd</p>
-                <h1 class="nominee-name">${escapeHtml(nominee.name)}</h1>
-                <div class="nominee-votes">${nominee.votes} stem${nominee.votes !== 1 ? 'men' : ''}</div>
-                <div class="nominee-motivations">
+                <p class="nominee-rank">#${rank} genomineerd</p>
+                <h1 class="nominee-name reveal-name" data-name="${escapeHtml(nominee.name)}">???</h1>
+                <div class="nominee-title reveal-detail" style="opacity:0">${escapeHtml(title)}</div>
+                <div class="nominee-votes reveal-detail" style="opacity:0">${nominee.votes} stem${nominee.votes !== 1 ? 'men' : ''}</div>
+                <div class="nominee-motivations reveal-detail" style="opacity:0">
                     ${nominee.motivations.map(m => `<blockquote>"${escapeHtml(m)}"</blockquote>`).join('')}
                 </div>
             </div>
@@ -40,7 +85,9 @@ function buildSlides() {
     });
 
     // Vul winnaar-slide
+    const winnerTitle = winner.title || generateTitle(winner.motivations);
     document.getElementById('winner-name').textContent = winner.name;
+    document.getElementById('winner-title').textContent = winnerTitle;
     document.getElementById('winner-votes').textContent = winner.votes + ' stemmen';
     document.getElementById('winner-motivations').innerHTML =
         winner.motivations.map(m => `<blockquote>"${escapeHtml(m)}"</blockquote>`).join('');
@@ -57,11 +104,56 @@ function nextSlide() {
 
     updateProgress();
 
+    // Drumroll-slide: start automatische countdown
+    if (slides[currentSlide].id === 'slide-drumroll') {
+        startDrumroll();
+        return;
+    }
+
+    // Naam onthulling met vertraging
+    const nameEl = slides[currentSlide].querySelector('.reveal-name');
+    if (nameEl) {
+        nameEl.classList.add('name-hidden');
+        setTimeout(() => {
+            nameEl.textContent = nameEl.dataset.name;
+            nameEl.classList.remove('name-hidden');
+            nameEl.classList.add('name-revealed');
+            // Toon stemmen en motivaties na naam
+            slides[currentSlide].querySelectorAll('.reveal-detail').forEach((el, i) => {
+                setTimeout(() => { el.style.opacity = '1'; el.classList.add('detail-appear'); }, 400 + i * 300);
+            });
+        }, 1200);
+    }
+
     // Confetti bij de winnaar (laatste slide)
     if (currentSlide === slides.length - 1) {
         startConfetti();
         document.getElementById('nav-hint').style.display = 'none';
     }
+}
+
+function startDrumroll() {
+    const dots = document.getElementById('drumroll-dots');
+    const countEl = document.getElementById('drumroll-count');
+    let count = 3;
+
+    // Toon aftelling
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countEl.textContent = count;
+            countEl.classList.remove('count-pop');
+            void countEl.offsetWidth; // force reflow
+            countEl.classList.add('count-pop');
+        } else {
+            clearInterval(interval);
+            // Ga automatisch naar winnaar-slide
+            setTimeout(() => nextSlide(), 600);
+        }
+    }, 1200);
+
+    countEl.textContent = count;
+    countEl.classList.add('count-pop');
 }
 
 function prevSlide() {

@@ -62,6 +62,12 @@ function checkAlreadyVoted() {
     }
 }
 
+function resetVote() {
+    localStorage.removeItem('mvdm-voted-juni-2026');
+    document.getElementById('already-voted').style.display = 'none';
+    document.getElementById('vote-form').style.display = 'block';
+}
+
 async function handleVote(e) {
     e.preventDefault();
     const nomineeVal = document.getElementById('nominee').value.trim();
