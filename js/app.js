@@ -28,11 +28,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = document.getElementById('submit-btn');
 
     function checkFields() {
+        const sameAsVoter = voter.value && nominee.value && voter.value === nominee.value;
+        if (sameAsVoter) {
+            nominee.value = '';
+        }
         const filled = voter.value.trim() && nominee.value.trim() && motivation.value.trim();
         submitBtn.disabled = !filled;
         submitBtn.classList.toggle('btn-disabled', !filled);
     }
-    voter.addEventListener('change', checkFields);
+    voter.addEventListener('change', () => {
+        // Disable de optie met dezelfde naam in de nominee-lijst
+        Array.from(nominee.options).forEach(opt => {
+            opt.disabled = opt.value && opt.value === voter.value;
+        });
+        checkFields();
+    });
     nominee.addEventListener('change', checkFields);
     motivation.addEventListener('input', checkFields);
     document.getElementById('vote-form').addEventListener('submit', handleVote);
