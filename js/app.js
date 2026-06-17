@@ -22,15 +22,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Stem
     checkAlreadyVoted();
+    const voter = document.getElementById('voter');
     const nominee = document.getElementById('nominee');
     const motivation = document.getElementById('motivation');
     const submitBtn = document.getElementById('submit-btn');
 
     function checkFields() {
-        const filled = nominee.value.trim() && motivation.value.trim();
+        const filled = voter.value.trim() && nominee.value.trim() && motivation.value.trim();
         submitBtn.disabled = !filled;
         submitBtn.classList.toggle('btn-disabled', !filled);
     }
+    voter.addEventListener('change', checkFields);
     nominee.addEventListener('change', checkFields);
     motivation.addEventListener('input', checkFields);
     document.getElementById('vote-form').addEventListener('submit', handleVote);
@@ -71,6 +73,7 @@ function resetVote() {
 
 async function handleVote(e) {
     e.preventDefault();
+    const voterVal = document.getElementById('voter').value.trim();
     const nomineeVal = document.getElementById('nominee').value.trim();
     const motivationVal = document.getElementById('motivation').value.trim();
     const btn = document.getElementById('submit-btn');
@@ -81,6 +84,7 @@ async function handleVote(e) {
 
     try {
         await db.ref('votes').push({
+            voter: voterVal,
             nominee: nomineeVal,
             motivation: motivationVal,
             timestamp: Date.now()
@@ -176,7 +180,7 @@ function renderAdmin(votes) {
     } else {
         const rev = [...votes].reverse();
         votesEl.innerHTML = rev.map(v =>
-            '<div class="vote-item"><div class="vote-item-header"><strong class="vote-item-to">\u2192 ' + esc(v.nominee) + '</strong></div><p class="vote-item-motivation">"' + esc(v.motivation) + '"</p></div>'
+            '<div class="vote-item"><div class="vote-item-header"><span class="vote-item-from">' + esc(v.voter || 'Anoniem') + ' \u2192</span> <strong class="vote-item-to">' + esc(v.nominee) + '</strong></div><p class="vote-item-motivation">"' + esc(v.motivation) + '"</p></div>'
         ).join('');
     }
 }
