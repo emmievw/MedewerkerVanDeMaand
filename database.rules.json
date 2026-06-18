@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "votes": {
+      ".read": true,
+      ".write": false,
+      "$voteId": {
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['voter', 'nominee', 'motivation', 'timestamp']) && newData.child('voter').isString() && newData.child('nominee').isString() && newData.child('motivation').isString() && newData.child('timestamp').isNumber()"
+      }
+    },
+    "$other": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}

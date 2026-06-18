@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Admin
     document.getElementById('login-form').addEventListener('submit', handleLogin);
     if (sessionStorage.getItem('mvdm-admin-auth')) showAdmin();
-    document.getElementById('clear-votes-btn').addEventListener('click', clearVotes);
 
     // Reveal
     document.getElementById('reveal-login-form').addEventListener('submit', handleRevealLogin);
@@ -141,14 +140,6 @@ async function handleRevealLogin(e) {
 function showReveal() {
     document.getElementById('reveal-login').style.display = 'none';
     document.getElementById('reveal-start').style.display = 'block';
-}
-
-function clearVotes() {
-    if (!confirm('Weet je zeker dat je ALLE stemmen wilt wissen? Dit kan niet ongedaan worden!')) return;
-    db.ref('votes').remove().then(() => {
-        localStorage.removeItem('mvdm-voted-juni-2026');
-        alert('Alle stemmen zijn gewist.');
-    });
 }
 
 function loadVotes() {
