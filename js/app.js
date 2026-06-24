@@ -207,10 +207,10 @@ function startReveal() {
         const singleVotes = all.filter(x => x.votes === 1).sort((a, b) => a.name.localeCompare(b.name));
         const multiVotes = all.filter(x => x.votes >= 2).sort((a, b) => a.votes - b.votes);
 
-        // Bouw reveal slides: eerst 1-stem overzicht, dan individuele aftelling
+        // Bouw reveal slides: eerst 1-stem in groepen van 4, dan individuele aftelling
         revealData = [];
-        if (singleVotes.length > 0) {
-            revealData.push({ type: 'single-overview', nominees: singleVotes });
+        for (let i = 0; i < singleVotes.length; i += 4) {
+            revealData.push({ type: 'single-overview', nominees: singleVotes.slice(i, i + 4) });
         }
         multiVotes.forEach(item => {
             revealData.push({ type: 'countdown', ...item });
