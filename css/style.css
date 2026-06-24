@@ -289,6 +289,34 @@ body {
     border-left-color: #f0c040;
 }
 
+/* Single votes overzichtspagina */
+.single-votes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+    text-align: left;
+}
+.single-vote-card {
+    background: var(--afas-green-light);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    border: 1px solid rgba(0, 166, 81, 0.15);
+}
+.single-vote-card .single-vote-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+.single-vote-card blockquote {
+    background: transparent;
+    border-left: 2px solid var(--afas-green);
+    padding: 0.4rem 0.8rem;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
 .reveal-nav { text-align: center; margin-top: 1.5rem; }
 .reveal-nav .btn-primary { width: auto; padding: 0.8rem 2rem; }
 

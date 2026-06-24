@@ -200,10 +200,21 @@ function startReveal() {
             grouped[v.nominee].push(v.motivation);
         });
 
-        // Sorteer minst naar meest (winnaar laatst)
-        revealData = Object.entries(grouped)
-            .map(([name, motivations]) => ({ name, votes: motivations.length, motivations }))
-            .sort((a, b) => a.votes - b.votes);
+        const all = Object.entries(grouped)
+            .map(([name, motivations]) => ({ name, votes: motivations.length, motivations }));
+
+        // Split: 1 stem apart, 2+ stemmen als aftelling
+        const singleVotes = all.filter(x => x.votes === 1).sort((a, b) => a.name.localeCompare(b.name));
+        const multiVotes = all.filter(x => x.votes >= 2).sort((a, b) => a.votes - b.votes);
+
+        // Bouw reveal slides: eerst 1-stem overzicht, dan individuele aftelling
+        revealData = [];
+        if (singleVotes.length > 0) {
+            revealData.push({ type: 'single-overview', nominees: singleVotes });
+        }
+        multiVotes.forEach(item => {
+            revealData.push({ type: 'countdown', ...item });
+        });
 
         revealIndex = 0;
         document.getElementById('reveal-start').style.display = 'none';
@@ -216,20 +227,39 @@ function showRevealSlide() {
     const item = revealData[revealIndex];
     const isWinner = revealIndex === revealData.length - 1;
     const total = revealData.length;
-    const rank = total - revealIndex;
 
     const slide = document.getElementById('reveal-slide');
     slide.className = 'reveal-slide' + (isWinner ? ' winner' : '');
 
     let html = '';
-    if (isWinner) {
-        html = '<p class="nominee-rank">\u{1F451} De winnaar is...</p>';
+
+    if (item.type === 'single-overview') {
+        // Overzichtspagina voor alle nominees met 1 stem
+        html = '<p class="nominee-rank">\u{1F44F} Ook genomineerd</p>';
+        html += '<p class="nominee-votes" style="margin-bottom:1.5rem;">Deze collega\'s kregen elk 1 stem</p>';
+        html += '<div class="single-votes-grid">';
+        item.nominees.forEach(n => {
+            html += '<div class="single-vote-card">';
+            html += '<p class="single-vote-name">' + esc(n.name) + '</p>';
+            html += '<blockquote>"' + esc(n.motivations[0]) + '"</blockquote>';
+            html += '</div>';
+        });
+        html += '</div>';
     } else {
-        html = '<p class="nominee-rank">#' + rank + ' genomineerd</p>';
+        // Individuele countdown slide (2+ stemmen)
+        const multiOnly = revealData.filter(x => x.type === 'countdown');
+        const rank = multiOnly.length - multiOnly.indexOf(item);
+
+        if (isWinner) {
+            html = '<p class="nominee-rank">\u{1F451} De winnaar is...</p>';
+        } else {
+            html = '<p class="nominee-rank">#' + rank + '</p>';
+        }
+        html += '<p class="nominee-name">' + esc(item.name) + '</p>';
+        html += '<p class="nominee-votes">' + item.votes + ' stemmen</p>';
+        html += item.motivations.map(m => '<blockquote>"' + esc(m) + '"</blockquote>').join('');
     }
-    html += '<p class="nominee-name">' + esc(item.name) + '</p>';
-    html += '<p class="nominee-votes">' + item.votes + ' stem' + (item.votes !== 1 ? 'men' : '') + '</p>';
-    html += item.motivations.map(m => '<blockquote>"' + esc(m) + '"</blockquote>').join('');
+
     slide.innerHTML = html;
 
     // Progress
