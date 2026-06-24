@@ -298,14 +298,14 @@ body {
 .single-votes-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    gap: 0.6rem;
     margin-top: 0.5rem;
     text-align: left;
 }
 .single-vote-card {
     background: var(--bg-white);
     border-radius: var(--radius);
-    padding: 1.2rem;
+    padding: 0.8rem;
     border: 2px dashed var(--afas-green);
     position: relative;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -325,7 +325,7 @@ body {
     font-weight: 700;
     font-size: 1.1rem;
     color: var(--afas-green-dark);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 .single-vote-card blockquote {
     background: transparent;
