@@ -228,11 +228,11 @@ body {
     font-weight: 600;
 }
 
-.vote-item { padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
+.vote-item { padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
 .vote-item:last-child { border-bottom: none; }
 .vote-item-header { display: flex; justify-content: space-between; align-items: center; }
 .vote-item-to { color: var(--afas-green); font-weight: 600; }
-.vote-item-motivation { color: var(--text-medium); font-style: italic; margin-top: 0.3rem; }
+.vote-item-motivation { color: var(--text-medium); font-style: italic; margin-top: 0.15rem; }
 
 /* Reveal */
 .reveal-intro { text-align: center; padding: 3rem 0; }
