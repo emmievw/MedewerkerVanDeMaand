@@ -84,6 +84,8 @@ body {
 /* Main */
 .main { padding: 2rem 1rem; }
 .container { max-width: 700px; margin: 0 auto; }
+#tab-reveal .reveal-slide { max-width: none; }
+#tab-reveal { max-width: 1200px; margin: 0 auto; }
 
 /* Tabs */
 .tab-content { display: none; }
