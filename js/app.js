@@ -235,8 +235,7 @@ function showRevealSlide() {
 
     if (item.type === 'single-overview') {
         // Overzichtspagina voor alle nominees met 1 stem
-        html = '<p class="nominee-rank">\u{1F44F} Ook genomineerd</p>';
-        html += '<p class="nominee-votes" style="margin-bottom:1.5rem;">Deze collega\'s kregen elk 1 stem</p>';
+        html = '<p class="nominee-rank">\u{1F44F} Genomineerd</p>';
         html += '<div class="single-votes-grid">';
         item.nominees.forEach(n => {
             html += '<div class="single-vote-card">';
