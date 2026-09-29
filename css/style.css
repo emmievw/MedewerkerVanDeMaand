@@ -87,6 +87,18 @@ body {
 #tab-reveal .reveal-slide { max-width: none; }
 #tab-reveal { max-width: 1200px; margin: 0 auto; }
 
+.site-notice {
+    max-width: 700px;
+    margin: 0 auto 1rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--afas-green-light);
+    color: var(--afas-green-dark);
+    border: 1px solid rgba(0, 166, 81, 0.2);
+    border-radius: var(--radius);
+    font-weight: 600;
+    text-align: center;
+}
+
 /* Tabs */
 .tab-content { display: none; }
 .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
